@@ -7,7 +7,7 @@
     android:background="@drawable/grad_back"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context=".Activity.ProfileActivity">
+    tools:context=".Fragment.ProfileFragment">
 
 
     <LinearLayout
@@ -74,22 +74,17 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnP_Dob"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:paddingHorizontal="20dp"
-                    android:background="@drawable/button"
-                    android:textColor="@color/WhiteColor"
-                    android:text="Pick DOB" />
 
                 <TextView
                     android:id="@+id/tvP_DOB_picked"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:textColor="@color/WhiteColor"
-                    android:background="@color/colorPrimary" />
+                    android:textSize="18sp"
+                    android:text="25-02-1995"/>
             </LinearLayout>
         </LinearLayout>
 

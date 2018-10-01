@@ -1,10 +1,10 @@
 package com.example.hassaan.attendencekeeperemployee.Activity;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hassaan.attendencekeeperemployee.API.UserAPI;
+import com.example.hassaan.attendencekeeperemployee.Fragment.BreakFragment;
+import com.example.hassaan.attendencekeeperemployee.Fragment.DashboardFragment;
+import com.example.hassaan.attendencekeeperemployee.Fragment.NotificationFragment;
+import com.example.hassaan.attendencekeeperemployee.Fragment.ProfileFragment;
 import com.example.hassaan.attendencekeeperemployee.Model.TblAttendance;
-import com.example.hassaan.attendencekeeperemployee.Model.TblCheck;
 import com.example.hassaan.attendencekeeperemployee.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -30,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import io.netopen.hotbitmapgg.library.view.RingProgressBar;
@@ -81,7 +83,7 @@ public class CheckedIn extends AppCompatActivity {
         tvAvailable = (TextView) findViewById(R.id.availableText);
         available_switch = (Switch) findViewById(R.id.availableSwitch);
         availableImage = (ImageView) findViewById(R.id.availableImage);
-        bottomNavigationView=findViewById(R.id.bottomNav);
+        bottomNavigationView = findViewById(R.id.bottomNav);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         date = Calendar.getInstance().getTime();
@@ -123,12 +125,14 @@ public class CheckedIn extends AppCompatActivity {
             }
         });*/
     }
+
     public static String getDateFromMillis(long d) {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        Log.i("Date......",df.format(d));
+        Log.i("Date......", df.format(d));
         return df.format(d);
     }
+
     public void getSeconds(long d) {
         SimpleDateFormat dfp = new SimpleDateFormat("ss");
         dfp.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -143,6 +147,7 @@ public class CheckedIn extends AppCompatActivity {
             }
         });
     }
+
     public void stop(View v) {
 
 
@@ -154,16 +159,18 @@ public class CheckedIn extends AppCompatActivity {
 //        integrator.setBarcodeImageEnabled(false);
 //        integrator.initiateScan();
     }
+
     private Runnable updateTimerThread = new Runnable() {
         public void run() {
             long currentTime = Calendar.getInstance().getTimeInMillis();
             timeInMilliseconds = currentTime - startTime;
-            Log.i("TimeInMillisec",timeInMilliseconds+"");
+            Log.i("TimeInMillisec", timeInMilliseconds + "");
             getSeconds(timeInMilliseconds);
             tvTimer.setText(getDateFromMillis(timeInMilliseconds));
             customHandler.postDelayed(this, 1000);
         }
     };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -192,7 +199,7 @@ public class CheckedIn extends AppCompatActivity {
                     long Duration = 0;
                     try {
                         CheckInD = formatter.parse(restoredDate);
-                        Duration = date.getTime()-CheckInD.getTime();
+                        Duration = date.getTime() - CheckInD.getTime();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -200,7 +207,7 @@ public class CheckedIn extends AppCompatActivity {
                     final String CheckOutDate = formatter.format(date);
                     //My code
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    String Checkin12="";
+                    String Checkin12 = "";
                     {
                         Date d1 = null, d2 = null;
                         try {
@@ -211,12 +218,12 @@ public class CheckedIn extends AppCompatActivity {
                         }
 
                         if (d1.compareTo(d2) != 0) {
-                            Log.e("Dates","Dates are not Equal");
-                            d1=null;
-                            d2=null;
+                            Log.e("Dates", "Dates are not Equal");
+                            d1 = null;
+                            d2 = null;
                             try {
-                                d1=formatter.parse(restoredDate);
-                                d2=formatter.parse(CheckOutDate);
+                                d1 = formatter.parse(restoredDate);
+                                d2 = formatter.parse(CheckOutDate);
 
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -224,15 +231,15 @@ public class CheckedIn extends AppCompatActivity {
                             d1.setHours(23);
                             d1.setMinutes(59);
                             d1.setSeconds(59);
-                            String Checkout12=formatter.format(d1);
+                            String Checkout12 = formatter.format(d1);
                             d2.setHours(0);
                             d2.setMinutes(0);
                             d2.setSeconds(0);
-                            Checkin12=formatter.format(d2);
+                            Checkin12 = formatter.format(d2);
                             //long Duration = CheckInD.getTime() - d1.getTime();
                             Log.i("TAG", "onResponse ofCalendar: " + date);
 
-                            Call<TblAttendance>SendAttendance = service.PutCheckIn(AttendanceId,AttendanceId,restoredDate, EmpId, Checkout12, Duration);
+                            Call<TblAttendance> SendAttendance = service.PutCheckIn(AttendanceId, AttendanceId, restoredDate, EmpId, Checkout12, Duration);
                             SendAttendance.enqueue(new Callback<TblAttendance>() {
                                 @Override
                                 public void onResponse(Call<TblAttendance> call, Response<TblAttendance> response) {
@@ -255,7 +262,7 @@ public class CheckedIn extends AppCompatActivity {
 
                                     int AttID = tblAttendance1.getAttendaceId();
                                     Log.i("TAG", "AttendenceID...................: " + AttID);
-                                    editor.putInt(AttendanceIdKey,AttID);
+                                    editor.putInt(AttendanceIdKey, AttID);
                                     editor.apply();
                                     checkout(CheckOutDate, finalDuration, finalCheckin1);
                                 }
@@ -265,8 +272,7 @@ public class CheckedIn extends AppCompatActivity {
                                     Log.i("TAG", "onFailure: " + t);
                                 }
                             });
-                        }
-                        else{
+                        } else {
                             Log.i("TAG", "onResponse ofCalendar: " + date);
                             checkout(CheckOutDate, Duration, restoredDate);
 //                            int AttendanceId2=prefs.getInt(AttendanceIdKey, 0);
@@ -333,15 +339,16 @@ public class CheckedIn extends AppCompatActivity {
 //            super.onBackPressed();
 
     }
-    private void checkout(String CheckOutDate,long Duration,String Checkin){
+
+    private void checkout(String CheckOutDate, long Duration, String Checkin) {
         final SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE).edit();
         final SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         final int EmpId = prefs.getInt(EmpIdKey, 0);
         final String restoredDate = prefs.getString("CheckInDate", null);
-        int AttendanceId2=prefs.getInt(AttendanceIdKey, 0);
+        int AttendanceId2 = prefs.getInt(AttendanceIdKey, 0);
         Log.i("TAG", "Attendence 22222: " + date);
         UserAPI service = UserAPI.retrofit.create(UserAPI.class);
-        Call<TblAttendance>SendAttendance = service.PutCheckIn(AttendanceId2,AttendanceId2, Checkin, EmpId, CheckOutDate, Duration);
+        Call<TblAttendance> SendAttendance = service.PutCheckIn(AttendanceId2, AttendanceId2, Checkin, EmpId, CheckOutDate, Duration);
         SendAttendance.enqueue(new Callback<TblAttendance>() {
             @Override
             public void onResponse(Call<TblAttendance> call, Response<TblAttendance> response) {
@@ -373,25 +380,40 @@ public class CheckedIn extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navHome:
-
-                    return true;
-                case R.id.navBreak:
-                    Intent intent = new Intent(CheckedIn.this, BreakActivity.class);
+                    Intent intent = new Intent(CheckedIn.this, CheckedIn.class);
                     startActivity(intent);
                     return true;
+                case R.id.navBreak:
+                    // Create new fragment and transaction
+                    // Replace whatever is in the fragment_container view with this fragment,
+                    // and add the transaction to the back stack
+                    transaction.replace(R.id.RelativeLayout, new BreakFragment());
+                    //transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
+                    return true;
                 case R.id.navNotifications:
-                    Intent intent1 = new Intent(CheckedIn.this, NotificationActivity.class);
-                    startActivity(intent1);
+                    transaction.replace(R.id.RelativeLayout, new NotificationFragment());
+                    //transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
                     return true;
                 case R.id.navDashboard:
-                    Intent intent2 = new Intent(CheckedIn.this, DashboardActivity.class);
-                    startActivity(intent2);
+                    transaction.replace(R.id.RelativeLayout, new DashboardFragment());
+
+                    // Commit the transaction
+                    transaction.commit();
                     return true;
                 case R.id.navProfile:
-                    Intent intent3 = new Intent(CheckedIn.this, ProfileActivity.class);
-                    startActivity(intent3);
+                    transaction.replace(R.id.RelativeLayout, new ProfileFragment());
+
+                    // Commit the transaction
+                    transaction.commit();
                     return true;
             }
             return false;

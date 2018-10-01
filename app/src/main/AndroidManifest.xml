@@ -24,10 +24,10 @@
         </activity>
         <activity android:name=".Activity.SignUpUserActivity" />
         <activity android:name=".Activity.CheckedIn" />
-        <activity android:name=".Activity.BreakActivity" />
-        <activity android:name=".Activity.NotificationActivity" />
-        <activity android:name=".Activity.DashboardActivity" />
-        <activity android:name=".Activity.ProfileActivity" />
+        <activity android:name=".Fragment.BreakFragment" />
+        <activity android:name=".Fragment.NotificationFragment" />
+        <activity android:name=".Fragment.DashboardFragment" />
+        <activity android:name=".Fragment.ProfileFragment" />
     </application>
 
 </manifest>
